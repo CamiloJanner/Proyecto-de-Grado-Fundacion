@@ -7,15 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
+    <Compile Remove="Pages\Encuestas\**" />
+    <Content Remove="Pages\Encuestas\**" />
+    <EmbeddedResource Remove="Pages\Encuestas\**" />
+    <None Remove="Pages\Encuestas\**" />
   </ItemGroup>
-	
-<ItemGroup>
-    <Folder Include="Data\" />
-    <Folder Include="Models\" />
-    <Folder Include="Pages\Encuestas\" />
-    <Folder Include="Repositories\" />
-    <Folder Include="Services\" />
+
+  <ItemGroup>
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
   </ItemGroup>
 
 </Project>
