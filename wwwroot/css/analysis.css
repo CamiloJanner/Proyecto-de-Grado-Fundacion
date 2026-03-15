@@ -1,0 +1,143 @@
+.analysis-container {
+    padding: 30px;
+    font-family: Arial;
+}
+
+.info-bar {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 20px;
+}
+
+.image-section {
+    display: flex;
+    gap: 40px;
+}
+
+.eye-box {
+    width: 45%;
+}
+
+.image-preview {
+    width: 100%;
+    height: 200px;
+    background: #e5e5e5;
+    margin-top: 10px;
+}
+
+.analyze-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: #1b6ec2;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+/* ACORDEON */
+
+.accordion {
+    margin-top: 20px;
+}
+
+.accordion-header {
+    background: #1b6ec2;
+    color: white;
+    padding: 12px;
+    cursor: pointer;
+}
+
+.accordion-content {
+    display: none;
+    padding: 15px;
+    border: 1px solid #ddd;
+}
+
+/* RESULTADOS */
+
+.result-section {
+    display: flex;
+    gap: 40px;
+}
+
+.result-box textarea {
+    width: 100%;
+    height: 120px;
+}
+
+/* VALIDACION */
+
+.validation-section {
+    display: flex;
+    gap: 20px;
+}
+
+.observations {
+    display: flex;
+    gap: 40px;
+    margin-top: 20px;
+}
+
+.obs-text {
+    width: 100%;
+    height: 120px;
+    resize: both;
+    overflow: auto;
+}
+
+/* BOTON REPORTE */
+
+.report-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: #1b6ec2;
+    color: white;
+}
+
+/* LOADING */
+
+.loading-section {
+    display: none;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.loader {
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #1b6ec2;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: auto;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* MODAL ERROR */
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background: white;
+    width: 300px;
+    margin: 15% auto;
+    padding: 20px;
+    text-align: center;
+}

@@ -1,0 +1,147 @@
+﻿@page
+@model AnalysisModel
+
+@{
+    ViewData["Title"] = "Análisis de Imagen";
+}
+
+<link rel="stylesheet" href="~/css/analysis.css" />
+
+<div class="analysis-container">
+
+    <h2>Análisis de Imagen</h2>
+
+    <div class="info-bar">
+        <span><b>CITA:</b> @Model.CodigoCita</span>
+        <span><b>PACIENTE:</b> @Model.NombrePaciente</span>
+        <span><b>FECHA:</b> @Model.Fecha</span>
+        <span><b>PERSONA RESPONSABLE:</b> Médico</span>
+    </div>
+
+    <div class="image-section">
+
+        <div class="eye-box">
+            <h3>Ojo Izquierdo</h3>
+            <input type="file" id="leftImage" accept="image/jpeg,image/jpg">
+            <div class="image-preview" id="previewLeft"></div>
+        </div>
+
+        <div class="eye-box">
+            <h3>Ojo Derecho</h3>
+            <input type="file" id="rightImage" accept="image/jpeg,image/jpg">
+            <div class="image-preview" id="previewRight"></div>
+        </div>
+
+    </div>
+
+    <button class="analyze-btn" id="startAnalysis">Confirmar inicio de análisis</button>
+
+
+    <!-- CARGANDO -->
+    <div id="loadingSection" class="loading-section">
+        <div class="loader"></div>
+        <p>Procesando análisis...</p>
+    </div>
+
+
+    <!-- RESUMEN -->
+    <div class="accordion">
+
+        <div class="accordion-header" onclick="toggleSection('resultContent')">
+            Resumen del Análisis
+        </div>
+
+        <div id="resultContent" class="accordion-content">
+
+            <div class="result-section">
+
+                <div class="result-box">
+                    <h4>Análisis Ojo Izquierdo</h4>
+                    <textarea></textarea>
+                </div>
+
+                <div class="result-box">
+                    <h4>Análisis Ojo Derecho</h4>
+                    <textarea></textarea>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- VALIDACION -->
+    <div class="accordion">
+
+        <div class="accordion-header" onclick="toggleSection('validationContent')">
+            Validación Médica
+        </div>
+
+        <div id="validationContent" class="accordion-content">
+
+            <div class="validation-section">
+
+                <div>
+                    <label>Recomendación del Médico</label>
+                    <select>
+                        <option>Retinopatía Diabética No Proliferativa</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label>Tipo de Retinopatía</label>
+                    <select>
+                        <option>Retinopatía Diabética</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label>Grado</label>
+                    <select>
+                        <option>Proliferativa</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="observations">
+
+                <div>
+                    <label>Observaciones clínicas ojo izquierdo</label>
+                    <textarea class="obs-text"></textarea>
+                </div>
+
+                <div>
+                    <label>Observaciones clínicas ojo derecho</label>
+                    <textarea class="obs-text"></textarea>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <button class="report-btn">Visualizar Reporte</button>
+
+</div>
+
+
+<!-- MODAL ERROR -->
+<div id="errorModal" class="modal">
+
+    <div class="modal-content">
+
+        <h3>Error de formato</h3>
+        <p>La imagen debe estar en formato JPG.</p>
+
+        <button onclick="closeModal()">Volver a cargar</button>
+
+    </div>
+
+</div>
+
+
+<script src="~/js/analysis.js"></script>
