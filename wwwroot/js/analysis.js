@@ -1,74 +1,58 @@
-﻿function previewImage(inputId, previewId) {
+﻿const input = document.getElementById("imageInput");
 
-    const input = document.getElementById(inputId);
+input.addEventListener("change", function (e) {
 
-    input.addEventListener("change", function (e) {
+    const file = e.target.files[0];
 
-        const file = e.target.files[0];
+    if (!file) return;
 
-        if (!file) return;
+    const extension = file.name.split(".").pop().toLowerCase();
 
-        const extension = file.name.split(".").pop().toLowerCase();
+    if (extension !== "jpg" && extension !== "jpeg") {
 
-        if (extension !== "jpg" && extension !== "jpeg") {
-            document.getElementById("errorModal").style.display = "block";
-            input.value = "";
-            return;
-        }
-
-        const reader = new FileReader();
-
-        reader.onload = function () {
-
-            const preview = document.getElementById(previewId);
-            preview.style.backgroundImage = "url(" + reader.result + ")";
-            preview.style.backgroundSize = "cover";
-            preview.style.backgroundPosition = "center";
-
-        }
-
-        reader.readAsDataURL(file);
-
-    });
-}
-
-previewImage("leftImage", "previewLeft");
-previewImage("rightImage", "previewRight");
-
-
-/* MODAL */
-
-function closeModal() {
-    document.getElementById("errorModal").style.display = "none";
-}
-
-
-/* ACORDEON */
-
-function toggleSection(id) {
-
-    const section = document.getElementById(id);
-
-    if (section.style.display === "block") {
-        section.style.display = "none";
-    } else {
-        section.style.display = "block";
+        alert("Solo se permiten imágenes JPG");
+        input.value = "";
+        return;
     }
 
-}
+    const reader = new FileReader();
+
+    reader.onload = function () {
+
+        document.getElementById("previewRight").style.backgroundImage =
+            "url(" + reader.result + ")";
+
+        document.getElementById("imageStatus").innerHTML =
+            "Imagen cargada: " + file.name;
+
+    }
+
+    reader.readAsDataURL(file);
+
+});
 
 
-/* LOADING ANALISIS */
 
 document.getElementById("startAnalysis").addEventListener("click", function () {
 
     document.getElementById("loadingSection").style.display = "block";
 
+    document.getElementById("imageStatus").innerHTML +=
+        "<br>Estado: Procesando...";
+
+
+
     setTimeout(function () {
 
         document.getElementById("loadingSection").style.display = "none";
 
-        alert("Análisis completado");
+        document.getElementById("analysisResult").innerHTML =
+            "Retinopatía Diabética no Proliferativa con un 92%";
+
+        document.getElementById("resultButtons").style.display = "block";
+
+        document.getElementById("rightSummary").value =
+            "Retinopatía Diabética no Proliferativa\nConfianza 92%\n\nHallazgos detectados:\n- Hemorragias\n- Exudados\n- Microaneurismas";
 
     }, 3000);
 

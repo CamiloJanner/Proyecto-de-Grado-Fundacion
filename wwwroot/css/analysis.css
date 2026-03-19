@@ -1,104 +1,274 @@
-.analysis-container {
-    padding: 30px;
-    font-family: Arial;
+/* ====== RESET BASICO ====== */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
 }
+
+
+/* ====== LAYOUT GENERAL ====== */
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+
+/* ====== SIDEBAR ====== */
+
+.sidebar {
+    width: 220px;
+    background: #f4f6f9;
+    border-right: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 40px;
+}
+
+.menu {
+    flex-grow: 1;
+}
+
+.menu-btn {
+    width: 100%;
+    padding: 12px;
+    background: #1b6ec2;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+    .menu-btn:hover {
+        background: #145aa0;
+    }
+
+.logout {
+    margin-top: 40px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+
+/* ====== CONTENIDO PRINCIPAL ====== */
+
+.analysis-container {
+    flex: 1;
+    padding: 35px;
+    background: #ffffff;
+}
+
+    .analysis-container h2 {
+        margin-bottom: 25px;
+    }
+
+
+/* ====== INFO BAR ====== */
 
 .info-bar {
     display: flex;
-    gap: 30px;
-    margin-bottom: 20px;
+    gap: 40px;
+    margin-bottom: 30px;
+    font-size: 14px;
 }
+
+
+/* ====== BOTON ARCHIVO ====== */
+
+.file-btn {
+    padding: 10px 18px;
+    background: #e5e5e5;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    margin-bottom: 25px;
+}
+
+    .file-btn:hover {
+        background: #d8d8d8;
+    }
+
+
+/* ====== IMAGENES ====== */
 
 .image-section {
     display: flex;
-    gap: 40px;
+    gap: 50px;
+    margin-bottom: 25px;
 }
 
 .eye-box {
     width: 45%;
 }
 
+    .eye-box h3 {
+        margin-bottom: 10px;
+    }
+
+
+/* PREVIEW */
+
 .image-preview {
     width: 100%;
-    height: 200px;
+    height: 220px;
     background: #e5e5e5;
-    margin-top: 10px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
 }
 
+
+/* ====== ESTADO DE IMAGEN ====== */
+
+#imageStatus {
+    font-size: 14px;
+    margin-top: 5px;
+    color: #333;
+}
+
+
+/* ====== RESULTADO ANALISIS ====== */
+
+.analysis-result {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #1b6ec2;
+}
+
+
+/* ====== BOTONES RESULTADO ====== */
+
+.result-buttons {
+    margin-top: 12px;
+    display: none;
+}
+
+    .result-buttons button {
+        padding: 8px 16px;
+        margin-right: 10px;
+        border: none;
+        cursor: pointer;
+    }
+
+#acceptBtn {
+    background: #1b6ec2;
+    color: white;
+}
+
+#repeatBtn {
+    background: #888;
+    color: white;
+}
+
+
+/* ====== BOTON ANALISIS ====== */
+
 .analyze-btn {
-    margin-top: 20px;
-    padding: 10px 20px;
+    margin-top: 10px;
+    padding: 12px 20px;
     background: #1b6ec2;
     color: white;
     border: none;
     cursor: pointer;
 }
 
-/* ACORDEON */
+    .analyze-btn:hover {
+        background: #145aa0;
+    }
 
-.accordion {
-    margin-top: 20px;
+
+/* ====== SECCIONES ====== */
+
+.section-title {
+    margin-top: 40px;
+    margin-bottom: 20px;
 }
 
-.accordion-header {
-    background: #1b6ec2;
-    color: white;
-    padding: 12px;
-    cursor: pointer;
-}
 
-.accordion-content {
-    display: none;
-    padding: 15px;
-    border: 1px solid #ddd;
-}
-
-/* RESULTADOS */
+/* ====== RESULTADOS ====== */
 
 .result-section {
     display: flex;
-    gap: 40px;
+    gap: 50px;
 }
 
-.result-box textarea {
-    width: 100%;
-    height: 120px;
+.result-box {
+    width: 45%;
 }
 
-/* VALIDACION */
+    .result-box textarea {
+        width: 100%;
+        height: 140px;
+        border: 1px solid #ccc;
+        padding: 8px;
+        resize: vertical;
+    }
+
+
+/* ====== VALIDACION ====== */
 
 .validation-section {
     display: flex;
-    gap: 20px;
+    gap: 40px;
+    margin-bottom: 20px;
 }
+
+    .validation-section label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 14px;
+    }
+
+    .validation-section select {
+        padding: 8px;
+        border: 1px solid #ccc;
+    }
+
+
+/* ====== OBSERVACIONES ====== */
 
 .observations {
     display: flex;
-    gap: 40px;
-    margin-top: 20px;
+    gap: 50px;
 }
 
-.obs-text {
-    width: 100%;
-    height: 120px;
-    resize: both;
-    overflow: auto;
-}
+    .observations textarea {
+        width: 100%;
+        height: 140px;
+        border: 1px solid #ccc;
+        padding: 8px;
+        resize: both;
+    }
 
-/* BOTON REPORTE */
+
+/* ====== BOTON REPORTE ====== */
 
 .report-btn {
-    margin-top: 20px;
-    padding: 10px 20px;
+    margin-top: 30px;
+    padding: 12px 22px;
     background: #1b6ec2;
     color: white;
+    border: none;
+    cursor: pointer;
 }
 
-/* LOADING */
+    .report-btn:hover {
+        background: #145aa0;
+    }
+
+
+/* ====== LOADING ====== */
 
 .loading-section {
     display: none;
-    margin-top: 20px;
+    margin-top: 25px;
     text-align: center;
 }
 
@@ -108,11 +278,12 @@
     border-radius: 50%;
     width: 40px;
     height: 40px;
-    animation: spin 1s linear infinite;
     margin: auto;
+    animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
+
     0% {
         transform: rotate(0deg);
     }
@@ -122,7 +293,8 @@
     }
 }
 
-/* MODAL ERROR */
+
+/* ====== MODAL ERROR ====== */
 
 .modal {
     display: none;
@@ -136,8 +308,9 @@
 
 .modal-content {
     background: white;
-    width: 300px;
-    margin: 15% auto;
+    width: 320px;
     padding: 20px;
     text-align: center;
+    margin: 15% auto;
+    border-radius: 6px;
 }

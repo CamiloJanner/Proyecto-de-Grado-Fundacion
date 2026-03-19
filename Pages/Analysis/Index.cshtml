@@ -7,137 +7,155 @@
 
 <link rel="stylesheet" href="~/css/analysis.css" />
 
-<div class="analysis-container">
+<div class="layout">
 
-    <h2>Análisis de Imagen</h2>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
 
-    <div class="info-bar">
-        <span><b>CITA:</b> @Model.CodigoCita</span>
-        <span><b>PACIENTE:</b> @Model.NombrePaciente</span>
-        <span><b>FECHA:</b> @Model.Fecha</span>
-        <span><b>PERSONA RESPONSABLE:</b> Médico</span>
-    </div>
+        <div class="logo">Clínica</div>
 
-    <div class="image-section">
-
-        <div class="eye-box">
-            <h3>Ojo Izquierdo</h3>
-            <input type="file" id="leftImage" accept="image/jpeg,image/jpg">
-            <div class="image-preview" id="previewLeft"></div>
+        <div class="menu">
+            <button class="menu-btn">Consultar citas</button>
         </div>
 
-        <div class="eye-box">
-            <h3>Ojo Derecho</h3>
-            <input type="file" id="rightImage" accept="image/jpeg,image/jpg">
-            <div class="image-preview" id="previewRight"></div>
+        <div class="logout">
+            Logout
         </div>
 
     </div>
 
-    <button class="analyze-btn" id="startAnalysis">Confirmar inicio de análisis</button>
 
+    <!-- CONTENIDO -->
+    <div class="analysis-container">
 
-    <!-- CARGANDO -->
-    <div id="loadingSection" class="loading-section">
-        <div class="loader"></div>
-        <p>Procesando análisis...</p>
-    </div>
+        <h2>Análisis de Imagen</h2>
 
-
-    <!-- RESUMEN -->
-    <div class="accordion">
-
-        <div class="accordion-header" onclick="toggleSection('resultContent')">
-            Resumen del Análisis
+        <div class="info-bar">
+            <span><b>CITA</b> @Model.CodigoCita</span>
+            <span><b>PACIENTE</b> @Model.NombrePaciente</span>
+            <span><b>FECHA</b> @Model.Fecha</span>
+            <span><b>PERSONA RESPONSABLE</b> Médico</span>
         </div>
 
-        <div id="resultContent" class="accordion-content">
 
-            <div class="result-section">
+        <!-- BOTON ARCHIVO -->
+        <input type="file" id="imageInput" accept="image/jpeg,image/jpg" hidden>
 
-                <div class="result-box">
-                    <h4>Análisis Ojo Izquierdo</h4>
-                    <textarea></textarea>
-                </div>
+        <button class="file-btn" onclick="document.getElementById('imageInput').click()">
+            Seleccionar archivo JPEG
+        </button>
 
-                <div class="result-box">
-                    <h4>Análisis Ojo Derecho</h4>
-                    <textarea></textarea>
+
+        <!-- IMAGENES -->
+        <div class="image-section">
+
+            <div class="eye-box">
+
+                <h3>Ojo Izquierdo</h3>
+                <div class="image-preview" id="previewLeft"></div>
+
+            </div>
+
+
+            <div class="eye-box">
+
+                <h3>Ojo Derecho</h3>
+                <div class="image-preview" id="previewRight"></div>
+
+                <div id="imageStatus"></div>
+
+                <div id="analysisResult" class="analysis-result"></div>
+
+                <div id="resultButtons" class="result-buttons">
+                    <button id="acceptBtn">Aceptar</button>
+                    <button id="repeatBtn">Repetir</button>
                 </div>
 
             </div>
 
         </div>
 
-    </div>
+
+        <button class="analyze-btn" id="startAnalysis">
+            Confirmar inicio de análisis
+        </button>
 
 
-    <!-- VALIDACION -->
-    <div class="accordion">
 
-        <div class="accordion-header" onclick="toggleSection('validationContent')">
-            Validación Médica
+        <!-- LOADING -->
+        <div id="loadingSection" class="loading-section">
+            <div class="loader"></div>
+            <p>Procesando análisis...</p>
         </div>
 
-        <div id="validationContent" class="accordion-content">
 
-            <div class="validation-section">
 
-                <div>
-                    <label>Recomendación del Médico</label>
-                    <select>
-                        <option>Retinopatía Diabética No Proliferativa</option>
-                    </select>
-                </div>
+        <!-- RESUMEN -->
+        <h3 class="section-title">Resumen del Análisis</h3>
 
-                <div>
-                    <label>Tipo de Retinopatía</label>
-                    <select>
-                        <option>Retinopatía Diabética</option>
-                    </select>
-                </div>
+        <div class="result-section">
 
-                <div>
-                    <label>Grado</label>
-                    <select>
-                        <option>Proliferativa</option>
-                    </select>
-                </div>
-
+            <div class="result-box">
+                <h4>Análisis Ojo Izquierdo</h4>
+                <textarea></textarea>
             </div>
 
-            <div class="observations">
-
-                <div>
-                    <label>Observaciones clínicas ojo izquierdo</label>
-                    <textarea class="obs-text"></textarea>
-                </div>
-
-                <div>
-                    <label>Observaciones clínicas ojo derecho</label>
-                    <textarea class="obs-text"></textarea>
-                </div>
-
+            <div class="result-box">
+                <h4>Análisis Ojo Derecho</h4>
+                <textarea id="rightSummary"></textarea>
             </div>
 
         </div>
 
-    </div>
-
-    <button class="report-btn">Visualizar Reporte</button>
-
-</div>
 
 
-<!-- MODAL ERROR -->
-<div id="errorModal" class="modal">
+        <!-- VALIDACION -->
+        <h3 class="section-title">Validación Médica</h3>
 
-    <div class="modal-content">
+        <div class="validation-section">
 
-        <h3>Error de formato</h3>
-        <p>La imagen debe estar en formato JPG.</p>
+            <div>
+                <label>Recomendación del Modelo</label>
+                <select id="modelRecommendation">
+                    <option>Retinopatía Diabética no Proliferativa</option>
+                </select>
+            </div>
 
-        <button onclick="closeModal()">Volver a cargar</button>
+            <div>
+                <label>Tipo de Retinopatía</label>
+                <select>
+                    <option>Retinopatía Diabética</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Grado</label>
+                <select>
+                    <option>Proliferativa</option>
+                </select>
+            </div>
+
+        </div>
+
+
+        <div class="observations">
+
+            <div>
+                <label>Observaciones clínicas ojo izquierdo</label>
+                <textarea></textarea>
+            </div>
+
+            <div>
+                <label>Observaciones clínicas ojo derecho</label>
+                <textarea></textarea>
+            </div>
+
+        </div>
+
+
+        <button class="report-btn">
+            Visualizar Reporte
+        </button>
 
     </div>
 
