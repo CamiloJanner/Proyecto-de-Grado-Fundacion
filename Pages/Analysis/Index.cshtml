@@ -15,7 +15,9 @@
         <div class="logo">Clínica</div>
 
         <div class="menu">
-            <button class="menu-btn">Consultar citas</button>
+            <a class="menu-btn" asp-page="/Analysis/consultar_citas">
+                Consultar citas
+            </a>
         </div>
 
         <div class="logout">
@@ -24,71 +26,86 @@
 
     </div>
 
-
     <!-- CONTENIDO -->
-    <div class="analysis-container">
+    <div class="analysis-container" id="reportContent">
 
         <h2>Análisis de Imagen</h2>
 
         <div class="info-bar">
-            <span><b>CITA</b> @Model.CodigoCita</span>
+            <span id="codigoCita"><b>CITA</b> @Model.CodigoCita</span>
             <span><b>PACIENTE</b> @Model.NombrePaciente</span>
             <span><b>FECHA</b> @Model.Fecha</span>
-            <span><b>PERSONA RESPONSABLE</b> Médico</span>
+            <span id="medicoResponsable"><b>PERSONA RESPONSABLE</b> Médico</span>
         </div>
 
-
-        <!-- BOTON ARCHIVO -->
-        <input type="file" id="imageInput" accept="image/jpeg,image/jpg" hidden>
-
-        <button class="file-btn" onclick="document.getElementById('imageInput').click()">
-            Seleccionar archivo JPEG
-        </button>
-
+        <!-- INPUTS -->
+        <input type="file" id="imageInputLeft" accept="image/jpeg,image/jpg" hidden>
+        <input type="file" id="imageInputRight" accept="image/jpeg,image/jpg" hidden>
 
         <!-- IMAGENES -->
         <div class="image-section">
 
             <div class="eye-box">
 
+                <button class="file-btn hide-on-report" onclick="document.getElementById('imageInputLeft').click()">
+                    Seleccionar archivo JPEG
+                </button>
+
                 <h3>Ojo Izquierdo</h3>
+
                 <div class="image-preview" id="previewLeft"></div>
+
+                <div id="imageStatusLeft"></div>
+
+                <button type="button" class="analyze-btn hide-on-report" id="startAnalysisLeft">
+                    Confirmar inicio de análisis
+                </button>
+
+                <div id="analysisResultLeft" class="analysis-result"></div>
+
+                <div id="resultButtonsLeft" class="result-buttons">
+                    <button id="acceptLeft">Aceptar</button>
+                    <button id="repeatLeft">Repetir</button>
+                </div>
+
+                <div id="acceptedLabelLeft" class="accepted-label"></div>
 
             </div>
 
-
             <div class="eye-box">
 
+                <button class="file-btn hide-on-report" onclick="document.getElementById('imageInputRight').click()">
+                    Seleccionar archivo JPEG
+                </button>
+
                 <h3>Ojo Derecho</h3>
+
                 <div class="image-preview" id="previewRight"></div>
 
-                <div id="imageStatus"></div>
+                <div id="imageStatusRight"></div>
 
-                <div id="analysisResult" class="analysis-result"></div>
+                <button type="button" class="analyze-btn hide-on-report" id="startAnalysisRight">
+                    Confirmar inicio de análisis
+                </button>
 
-                <div id="resultButtons" class="result-buttons">
-                    <button id="acceptBtn">Aceptar</button>
-                    <button id="repeatBtn">Repetir</button>
+                <div id="analysisResultRight" class="analysis-result"></div>
+
+                <div id="resultButtonsRight" class="result-buttons">
+                    <button id="acceptRight">Aceptar</button>
+                    <button id="repeatRight">Repetir</button>
                 </div>
+
+                <div id="acceptedLabelRight" class="accepted-label"></div>
 
             </div>
 
         </div>
-
-
-        <button class="analyze-btn" id="startAnalysis">
-            Confirmar inicio de análisis
-        </button>
-
-
 
         <!-- LOADING -->
         <div id="loadingSection" class="loading-section">
             <div class="loader"></div>
-            <p>Procesando análisis...</p>
+            <p id="processingText">Procesando análisis...</p>
         </div>
-
-
 
         <!-- RESUMEN -->
         <h3 class="section-title">Resumen del Análisis</h3>
@@ -97,17 +114,15 @@
 
             <div class="result-box">
                 <h4>Análisis Ojo Izquierdo</h4>
-                <textarea></textarea>
+                <textarea id="summaryLeft" readonly></textarea>
             </div>
 
             <div class="result-box">
                 <h4>Análisis Ojo Derecho</h4>
-                <textarea id="rightSummary"></textarea>
+                <textarea id="summaryRight" readonly></textarea>
             </div>
 
         </div>
-
-
 
         <!-- VALIDACION -->
         <h3 class="section-title">Validación Médica</h3>
@@ -118,42 +133,53 @@
                 <label>Recomendación del Modelo</label>
                 <select id="modelRecommendation">
                     <option>Retinopatía Diabética no Proliferativa</option>
+                    <option>Retinopatía Diabética Proliferativa</option>
+                    <option>Retinopatía Hipertensiva</option>
+                    <option>Sin signos de retinopatía</option>
                 </select>
             </div>
 
             <div>
                 <label>Tipo de Retinopatía</label>
-                <select>
-                    <option>Retinopatía Diabética</option>
+                <select id="retinopathyType">
+                    <option value="">Seleccionar</option>
+                    <option value="diabetica">Retinopatía Diabética</option>
+                    <option value="hipertensiva">Retinopatía Hipertensiva</option>
                 </select>
             </div>
 
             <div>
                 <label>Grado</label>
-                <select>
+                <select id="retinopathyGrade" disabled>
+                    <option value="">Seleccionar</option>
+                    <option>Leve</option>
+                    <option>Moderada</option>
+                    <option>Severa</option>
                     <option>Proliferativa</option>
                 </select>
             </div>
 
         </div>
 
-
+        <!-- OBSERVACIONES -->
         <div class="observations">
 
             <div>
                 <label>Observaciones clínicas ojo izquierdo</label>
-                <textarea></textarea>
+                <textarea id="obsLeft"></textarea>
             </div>
 
             <div>
                 <label>Observaciones clínicas ojo derecho</label>
-                <textarea></textarea>
+                <textarea id="obsRight"></textarea>
             </div>
 
         </div>
 
+        <!-- DATOS VALIDACION -->
+        <div id="validationInfo" style="margin-top:20px;"></div>
 
-        <button class="report-btn">
+        <button class="report-btn hide-on-report" id="btnReport">
             Visualizar Reporte
         </button>
 
@@ -161,5 +187,8 @@
 
 </div>
 
+<!-- OVERLAY PARA ZOOM -->
+<div id="imageOverlay"></div>
 
-<script src="~/js/analysis.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="@Url.Content("~/js/analysis.js")"></script>

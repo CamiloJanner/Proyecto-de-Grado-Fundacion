@@ -1,0 +1,168 @@
+﻿@page
+@model ProyectoDeGradoFundacion.Pages.Analysis.consultar_citasModel
+
+@{
+    ViewData["Title"] = "Citas Habilitadas para Análisis de IA";
+}
+
+<link rel="stylesheet" href="~/css/citas.css" />
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+        <div class="logo">Clínica</div>
+
+        <div class="menu">
+            <a class="menu-btn" asp-page="/Menu/Index">
+                Menú
+            </a>
+            <a class="menu-btn" asp-page="/Analysis/historial_analisis" style="margin-top:10px;">
+                Historial de análisis
+            </a>
+        </div>
+
+        <div class="logout">
+            Logout
+        </div>
+
+    </div>
+
+    <!-- CONTENIDO -->
+    <div class="content">
+
+        <h2>Citas Habilitadas para Análisis de IA</h2>
+
+        <!-- MENSAJE ERROR CLINIC ONLINE -->
+        <div id="errorClinic" class="error-box"></div>
+
+        <div class="actions">
+            <button type="button" class="primary" id="consultarPacientes">Consultar Pacientes</button>
+            <button type="button" class="secondary" id="limpiarFiltros">Limpiar filtros</button>
+        </div>
+
+        <!-- FILTROS -->
+        <div class="filters">
+
+            <div class="filter-item">
+                <label>Código</label>
+                <input type="text" id="filterCodigo">
+            </div>
+
+            <div class="filter-item">
+                <label>Nombre</label>
+                <input type="text" id="filterNombre">
+            </div>
+
+            <div class="filter-item">
+                <label>Apellido</label>
+                <input type="text" id="filterApellido">
+            </div>
+
+            <div class="filter-item">
+                <label>Tipo</label>
+                <input type="text" id="filterTipo">
+            </div>
+
+            <div class="filter-item">
+                <label>Documento</label>
+                <input type="text" id="filterDocumento">
+            </div>
+
+            <button type="button" class="search-btn" id="buscarCitas">Buscar</button>
+
+        </div>
+
+        <!-- TABLA -->
+        <table class="table">
+
+            <thead>
+                <tr>
+                    <th>CODIGO</th>
+                    <th>NOMBRE 1</th>
+                    <th>NOMBRE 2</th>
+                    <th>APELLIDO 1</th>
+                    <th>APELLIDO 2</th>
+                    <th>TIPO</th>
+                    <th>DOCUMENTO</th>
+                    <th>ACCIONES</th>
+                </tr>
+            </thead>
+
+            <tbody id="tablaCitas">
+
+                <tr>
+                    <td>CITA-001</td>
+                    <td>JULIO</td>
+                    <td>ANDRES</td>
+                    <td>RAMIREZ</td>
+                    <td>TORRES</td>
+                    <td>CC</td>
+                    <td>1094583726</td>
+                    <td>
+                        <a class="view-btn" data-cita="CITA-001" asp-page="/Analysis/Index">
+                            Ver
+                        </a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>CITA-002</td>
+                    <td>JUAN</td>
+                    <td>CARLOS</td>
+                    <td>GOMEZ</td>
+                    <td>DELGADO</td>
+                    <td>CC</td>
+                    <td>1032764915</td>
+                    <td>
+                        <a class="view-btn" data-cita="CITA-002" asp-page="/Analysis/Index">
+                            Ver
+                        </a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>CITA-003</td>
+                    <td>MARIA</td>
+                    <td>FERNANDA</td>
+                    <td>LOPEZ</td>
+                    <td>CASTILLO</td>
+                    <td>CC</td>
+                    <td>1118492307</td>
+                    <td>
+                        <a class="view-btn" data-cita="CITA-003" asp-page="/Analysis/Index">
+                            Ver
+                        </a>
+                    </td>
+                </tr>
+
+                <!-- FILA SIN RESULTADOS -->
+                <tr id="noResults" class="no-results" style="display:none;">
+                    <td colspan="8">
+                        No se encontraron citas con los filtros aplicados
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+        <!-- PAGINACION -->
+        <div class="pagination">
+
+            <button>&lt;</button>
+            <button class="active">1</button>
+            <button>2</button>
+            <button>3</button>
+            <button>4</button>
+            <button>5</button>
+            <button>6</button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="~/js/citas.js"></script>

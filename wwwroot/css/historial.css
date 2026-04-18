@@ -1,0 +1,154 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 220px;
+    background: #f4f6f9;
+    border-right: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 40px;
+}
+
+.menu {
+    flex-grow: 1;
+}
+
+.menu-btn {
+    width: 100%;
+    padding: 12px;
+    background: #1b6ec2;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    display: block;
+    text-align: center;
+}
+
+    .menu-btn:hover {
+        background: #145aa0;
+    }
+
+.logout {
+    margin-top: 40px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.content {
+    flex: 1;
+    padding: 35px;
+    background: #fff;
+}
+
+    .content h2 {
+        margin-bottom: 20px;
+    }
+
+.error-box {
+    display: none;
+    background: #ffdede;
+    border: 1px solid #ff5c5c;
+    color: #a00000;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+.actions {
+    margin-bottom: 20px;
+}
+
+.primary {
+    background: #1b6ec2;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    margin-right: 10px;
+}
+
+.secondary {
+    background: #2c7fbf;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+}
+
+.filters {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.filter-item {
+    display: flex;
+    flex-direction: column;
+}
+
+    .filter-item label {
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+
+    .filter-item input {
+        padding: 8px;
+        border: 1px solid #ccc;
+        width: 150px;
+    }
+
+.search-btn {
+    background: #1b6ec2;
+    color: white;
+    border: none;
+    padding: 9px 18px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .table th {
+        text-align: left;
+        border-bottom: 2px solid #1b6ec2;
+        padding: 10px;
+        color: #1b6ec2;
+    }
+
+    .table td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+
+.view-btn {
+    background: #1b6ec2;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.no-results {
+    text-align: center;
+    padding: 20px;
+    color: #888;
+    font-style: italic;
+}

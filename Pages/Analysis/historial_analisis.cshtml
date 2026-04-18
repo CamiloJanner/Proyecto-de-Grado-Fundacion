@@ -1,0 +1,142 @@
+﻿@page
+@model ProyectoDeGradoFundacion.Pages.Analysis.historial_analisisModel
+@{
+    ViewData["Title"] = "Historial de análisis";
+}
+
+<link rel="stylesheet" href="~/css/historial.css" />
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+        <div class="logo">Clínica</div>
+
+        <div class="menu">
+
+            <a class="menu-btn" asp-page="/Menu/Index">
+                Menú
+            </a>
+
+            <a class="menu-btn" asp-page="/Analysis/consultar_citas" style="margin-top:10px;">
+                Consultar citas
+            </a>
+
+        </div>
+
+        <div class="logout">
+            Logout
+        </div>
+
+    </div>
+
+    <!-- CONTENIDO -->
+    <div class="content">
+
+        <h2>Historial de Análisis Realizados</h2>
+
+        <div id="errorClinic" class="error-box"></div>
+
+        <div class="actions">
+            <button type="button" class="primary" id="consultarHistorial">Consultar historial</button>
+            <button type="button" class="secondary" id="limpiarFiltros">Limpiar filtros</button>
+        </div>
+
+        <!-- FILTROS -->
+        <div class="filters">
+
+            <div class="filter-item">
+                <label>Nombre paciente</label>
+                <input type="text" id="filterNombre">
+            </div>
+
+            <div class="filter-item">
+                <label>Fecha análisis</label>
+                <input type="date" id="filterFecha">
+            </div>
+
+            <div class="filter-item">
+                <label>Resultado</label>
+                <input type="text" id="filterResultado">
+            </div>
+
+            <div class="filter-item">
+                <label>Médico responsable</label>
+                <input type="text" id="filterMedico">
+            </div>
+
+            <button type="button" class="search-btn" id="buscarHistorial">Buscar</button>
+
+        </div>
+
+        <!-- TABLA -->
+        <table class="table">
+
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>PACIENTE</th>
+                    <th>FECHA</th>
+                    <th>RESULTADO</th>
+                    <th>MÉDICO</th>
+                    <th>ACCIONES</th>
+                </tr>
+            </thead>
+
+            <tbody id="tablaHistorial">
+
+                <tr>
+                    <td>AN-001</td>
+                    <td>Julio Ramirez</td>
+                    <td>2026-03-20</td>
+                    <td>Retinopatía diabética leve</td>
+                    <td>Dr. Pérez</td>
+                    <td>
+                        <a class="view-btn" data-analisis="AN-001">
+                            Ver
+                        </a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>AN-002</td>
+                    <td>Juan Gomez</td>
+                    <td>2026-03-19</td>
+                    <td>Sin retinopatía</td>
+                    <td>Dra. Martínez</td>
+                    <td>
+                        <a class="view-btn" data-analisis="AN-002">
+                            Ver
+                        </a>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>AN-003</td>
+                    <td>Maria Lopez</td>
+                    <td>2026-03-18</td>
+                    <td>Retinopatía moderada</td>
+                    <td>Dr. Pérez</td>
+                    <td>
+                        <a class="view-btn" data-analisis="AN-003">
+                            Ver
+                        </a>
+                    </td>
+                </tr>
+
+                <tr id="noResults" class="no-results" style="display:none;">
+                    <td colspan="6">
+                        No se encontraron análisis con los filtros aplicados
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<script src="~/js/historial.js"></script>
