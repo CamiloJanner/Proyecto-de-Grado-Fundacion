@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProyectoDeGradoFundacion.Data;
 
@@ -11,9 +12,11 @@ using ProyectoDeGradoFundacion.Data;
 namespace ProyectoDeGradoFundacion.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260418215320_UpdateCitas")]
+    partial class UpdateCitas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,14 +38,6 @@ namespace ProyectoDeGradoFundacion.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)")
                         .HasColumnName("cita_externa_id");
-
-                    b.Property<float?>("ConfianzaOjoDerecho")
-                        .HasColumnType("float")
-                        .HasColumnName("confianza_ojo_derecho");
-
-                    b.Property<float?>("ConfianzaOjoIzquierdo")
-                        .HasColumnType("float")
-                        .HasColumnName("confianza_ojo_izquierdo");
 
                     b.Property<string>("EstadoCita")
                         .IsRequired()
@@ -87,11 +82,6 @@ namespace ProyectoDeGradoFundacion.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)")
                         .HasColumnName("paciente_externo_id");
-
-                    b.Property<string>("RecomendacionModelo")
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(200)")
-                        .HasColumnName("recomendacion_modelo");
 
                     b.Property<string>("ReportePdf")
                         .HasMaxLength(255)
