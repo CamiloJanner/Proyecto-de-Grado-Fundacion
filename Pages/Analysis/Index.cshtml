@@ -1,8 +1,9 @@
 ﻿@page
-@model AnalysisModel
+@model ProyectoDeGradoFundacion.Pages.Analysis.AnalysisModel
 
 @{
     ViewData["Title"] = "Análisis de Imagen";
+    Layout = null;
 }
 
 <link rel="stylesheet" href="~/css/analysis.css" />
@@ -20,9 +21,12 @@
             </a>
         </div>
 
-        <div class="logout">
-            Logout
-        </div>
+        <form method="post" asp-page="/Login/inicio" asp-page-handler="Logout" class="logout-form">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="logout">
+                Logout
+            </button>
+        </form>
 
     </div>
 
@@ -35,14 +39,15 @@
             <span id="codigoCita"><b>CITA</b> @Model.CodigoCita</span>
             <span><b>PACIENTE</b> @Model.NombrePaciente</span>
             <span><b>FECHA</b> @Model.Fecha</span>
-            <span id="medicoResponsable"><b>PERSONA RESPONSABLE</b> Médico</span>
+            <span id="medicoResponsable">
+                <b>PERSONA RESPONSABLE</b>
+                <span id="medicoResponsableNombre" class="medico-login">@Model.MedicoResponsable</span>
+            </span>
         </div>
 
-        <!-- INPUTS -->
         <input type="file" id="imageInputLeft" accept="image/jpeg,image/jpg" hidden>
         <input type="file" id="imageInputRight" accept="image/jpeg,image/jpg" hidden>
 
-        <!-- IMAGENES -->
         <div class="image-section">
 
             <div class="eye-box">
@@ -101,67 +106,116 @@
 
         </div>
 
-        <!-- LOADING -->
         <div id="loadingSection" class="loading-section">
             <div class="loader"></div>
             <p id="processingText">Procesando análisis...</p>
         </div>
 
-        <!-- RESUMEN -->
         <h3 class="section-title">Resumen del Análisis</h3>
 
         <div class="result-section">
 
             <div class="result-box">
                 <h4>Análisis Ojo Izquierdo</h4>
-                <textarea id="summaryLeft" readonly></textarea>
+                <div id="summaryLeft" class="summary-content"></div>
             </div>
 
             <div class="result-box">
                 <h4>Análisis Ojo Derecho</h4>
-                <textarea id="summaryRight" readonly></textarea>
+                <div id="summaryRight" class="summary-content"></div>
             </div>
 
         </div>
 
-        <!-- VALIDACION -->
         <h3 class="section-title">Validación Médica</h3>
 
-        <div class="validation-section">
+        <div class="validation-area">
 
-            <div>
-                <label>Recomendación del Modelo</label>
-                <select id="modelRecommendation">
-                    <option>Retinopatía Diabética no Proliferativa</option>
-                    <option>Retinopatía Diabética Proliferativa</option>
-                    <option>Retinopatía Hipertensiva</option>
-                    <option>Sin signos de retinopatía</option>
-                </select>
+            <!-- FILA PRINCIPAL -->
+            <div class="validation-row" id="validationRowPrimary" style="display:none;">
+
+                <div class="eye-label-box" id="eyeLabelPrimary">
+                    Ojo
+                </div>
+
+                <div class="validation-section">
+
+                    <div>
+                        <label>Análisis del Médico</label>
+                        <select id="modelRecommendation">
+                            <option>Retinopatía Diabética no Proliferativa</option>
+                            <option>Retinopatía Diabética Proliferativa</option>
+                            <option>Retinopatía Hipertensiva</option>
+                            <option>Sin signos de retinopatía</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Tipo de Retinopatía</label>
+                        <select id="retinopathyType">
+                            <option value="">Seleccionar</option>
+                            <option value="diabetica">Retinopatía Diabética</option>
+                            <option value="hipertensiva">Retinopatía Hipertensiva</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Grado</label>
+                        <select id="retinopathyGrade" disabled>
+                            <option value="">Seleccionar</option>
+                        </select>
+                    </div>
+
+                </div>
+
             </div>
 
-            <div>
-                <label>Tipo de Retinopatía</label>
-                <select id="retinopathyType">
-                    <option value="">Seleccionar</option>
-                    <option value="diabetica">Retinopatía Diabética</option>
-                    <option value="hipertensiva">Retinopatía Hipertensiva</option>
-                </select>
+            <!-- BOTON + -->
+            <div class="add-eye-wrapper hide-on-report" id="addSecondEyeWrapper" style="display:none;">
+                <button type="button" class="add-eye-btn" id="btnAddSecondEye">+</button>
             </div>
 
-            <div>
-                <label>Grado</label>
-                <select id="retinopathyGrade" disabled>
-                    <option value="">Seleccionar</option>
-                    <option>Leve</option>
-                    <option>Moderada</option>
-                    <option>Severa</option>
-                    <option>Proliferativa</option>
-                </select>
+            <!-- FILA SECUNDARIA -->
+            <div class="validation-row" id="validationRowSecondary" style="display:none;">
+
+                <div class="eye-label-box" id="eyeLabelSecondary">
+                    Ojo
+                </div>
+
+                <div class="validation-section">
+
+                    <div>
+                        <label>Análisis del Médico</label>
+                        <select id="modelRecommendationSecond">
+                            <option>Retinopatía Diabética no Proliferativa</option>
+                            <option>Retinopatía Diabética Proliferativa</option>
+                            <option>Retinopatía Hipertensiva</option>
+                            <option>Sin signos de retinopatía</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Tipo de Retinopatía</label>
+                        <select id="retinopathyTypeSecond">
+                            <option value="">Seleccionar</option>
+                            <option value="diabetica">Retinopatía Diabética</option>
+                            <option value="hipertensiva">Retinopatía Hipertensiva</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>Grado</label>
+                        <select id="retinopathyGradeSecond" disabled>
+                            <option value="">Seleccionar</option>
+                        </select>
+                    </div>
+
+                </div>
+
             </div>
 
         </div>
 
-        <!-- OBSERVACIONES -->
         <div class="observations">
 
             <div>
@@ -176,7 +230,6 @@
 
         </div>
 
-        <!-- DATOS VALIDACION -->
         <div id="validationInfo" style="margin-top:20px;"></div>
 
         <button class="report-btn hide-on-report" id="btnReport">
@@ -187,8 +240,9 @@
 
 </div>
 
-<!-- OVERLAY PARA ZOOM -->
 <div id="imageOverlay"></div>
+
+@Html.AntiForgeryToken()
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script src="@Url.Content("~/js/analysis.js")"></script>

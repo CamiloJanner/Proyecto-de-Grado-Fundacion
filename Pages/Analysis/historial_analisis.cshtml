@@ -1,14 +1,15 @@
 ﻿@page
 @model ProyectoDeGradoFundacion.Pages.Analysis.historial_analisisModel
+
 @{
     ViewData["Title"] = "Historial de análisis";
+    Layout = null;
 }
 
 <link rel="stylesheet" href="~/css/historial.css" />
 
 <div class="layout">
 
-    <!-- SIDEBAR -->
     <div class="sidebar">
 
         <div class="logo">Clínica</div>
@@ -25,111 +26,159 @@
 
         </div>
 
-        <div class="logout">
-            Logout
-        </div>
+        <form method="post" asp-page="/Login/inicio" asp-page-handler="Logout" class="logout-form">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="logout">
+                Logout
+            </button>
+        </form>
 
     </div>
 
-    <!-- CONTENIDO -->
     <div class="content">
 
         <h2>Historial de Análisis Realizados</h2>
 
         <div id="errorClinic" class="error-box"></div>
 
-        <div class="actions">
-            <button type="button" class="primary" id="consultarHistorial">Consultar historial</button>
-            <button type="button" class="secondary" id="limpiarFiltros">Limpiar filtros</button>
-        </div>
+        <form method="get">
 
-        <!-- FILTROS -->
-        <div class="filters">
+            <div class="actions">
+                <button type="submit" class="primary" id="consultarHistorial">
+                    Consultar historial
+                </button>
 
-            <div class="filter-item">
-                <label>Nombre paciente</label>
-                <input type="text" id="filterNombre">
+                <a class="secondary" asp-page="/Analysis/historial_analisis">
+                    Limpiar filtros
+                </a>
             </div>
 
-            <div class="filter-item">
-                <label>Fecha análisis</label>
-                <input type="date" id="filterFecha">
+            <div class="filters">
+
+                <div class="filter-item">
+                    <label>Nombre paciente</label>
+                    <input type="text" asp-for="FilterNombre" id="filterNombre">
+                </div>
+
+                <div class="filter-item">
+                    <label>Fecha análisis</label>
+                    <input type="date" asp-for="FilterFecha" id="filterFecha">
+                </div>
+
+                <div class="filter-item">
+                    <label>Resultado</label>
+                    <input type="text" asp-for="FilterResultado" id="filterResultado">
+                </div>
+
+                <div class="filter-item">
+                    <label>Médico responsable</label>
+                    <input type="text" asp-for="FilterMedico" id="filterMedico">
+                </div>
+
+                <button type="submit" class="search-btn" id="buscarHistorial">
+                    Buscar
+                </button>
+
             </div>
 
-            <div class="filter-item">
-                <label>Resultado</label>
-                <input type="text" id="filterResultado">
-            </div>
+        </form>
 
-            <div class="filter-item">
-                <label>Médico responsable</label>
-                <input type="text" id="filterMedico">
-            </div>
-
-            <button type="button" class="search-btn" id="buscarHistorial">Buscar</button>
-
-        </div>
-
-        <!-- TABLA -->
         <table class="table">
 
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>CITA</th>
                     <th>PACIENTE</th>
-                    <th>FECHA</th>
+                    <th>DOCUMENTO</th>
+                    <th>FECHA ANÁLISIS</th>
+                    <th>IMÁGENES</th>
                     <th>RESULTADO</th>
                     <th>MÉDICO</th>
-                    <th>ACCIONES</th>
+                    <th>PDF</th>
                 </tr>
             </thead>
 
             <tbody id="tablaHistorial">
 
-                <tr>
-                    <td>AN-001</td>
-                    <td>Julio Ramirez</td>
-                    <td>2026-03-20</td>
-                    <td>Retinopatía diabética leve</td>
-                    <td>Dr. Pérez</td>
-                    <td>
-                        <a class="view-btn" data-analisis="AN-001">
-                            Ver
-                        </a>
-                    </td>
-                </tr>
+                @foreach (var cita in Model.Historial)
+                {
+                    <tr>
+                        <td>@cita.CitaExternaId</td>
 
-                <tr>
-                    <td>AN-002</td>
-                    <td>Juan Gomez</td>
-                    <td>2026-03-19</td>
-                    <td>Sin retinopatía</td>
-                    <td>Dra. Martínez</td>
-                    <td>
-                        <a class="view-btn" data-analisis="AN-002">
-                            Ver
-                        </a>
-                    </td>
-                </tr>
+                        <td>@cita.Usuario.NombreUsuario @cita.Usuario.ApellidoUsuario</td>
 
-                <tr>
-                    <td>AN-003</td>
-                    <td>Maria Lopez</td>
-                    <td>2026-03-18</td>
-                    <td>Retinopatía moderada</td>
-                    <td>Dr. Pérez</td>
-                    <td>
-                        <a class="view-btn" data-analisis="AN-003">
-                            Ver
-                        </a>
-                    </td>
-                </tr>
+                        <td>
+                            @cita.Usuario.TipoIdentificacion
+                            @cita.Usuario.NumeroIdentificacion
+                        </td>
 
-                <tr id="noResults" class="no-results" style="display:none;">
-                    <td colspan="6">
-                        No se encontraron análisis con los filtros aplicados
-                    </td>
-                </tr>
+                        <td>@cita.FechaAnalisis?.ToString("yyyy-MM-dd HH:mm")</td>
+
+                        <td>
+                            @if (!string.IsNullOrWhiteSpace(cita.ImagenOjoIzquierdo))
+                            {
+                                <a class="view-btn" href="@Url.Content(cita.ImagenOjoIzquierdo)" target="_blank">
+                                    OI
+                                </a>
+                            }
+
+                            @if (!string.IsNullOrWhiteSpace(cita.ImagenOjoDerecho))
+                            {
+                                <a class="view-btn" href="@Url.Content(cita.ImagenOjoDerecho)" target="_blank">
+                                    OD
+                                </a>
+                            }
+
+                            @if (string.IsNullOrWhiteSpace(cita.ImagenOjoIzquierdo) &&
+                                 string.IsNullOrWhiteSpace(cita.ImagenOjoDerecho))
+                            {
+                                <span style="font-size:11px; color:#6a7883;">Sin imágenes</span>
+                            }
+                        </td>
+
+                        <td>
+                            @if (!string.IsNullOrWhiteSpace(cita.ResultadoOjoIzquierdo))
+                            {
+                                <span><strong>OI:</strong> @cita.ResultadoOjoIzquierdo</span><br />
+                            }
+
+                            @if (!string.IsNullOrWhiteSpace(cita.ResultadoOjoDerecho))
+                            {
+                                <span><strong>OD:</strong> @cita.ResultadoOjoDerecho</span>
+                            }
+
+                            @if (string.IsNullOrWhiteSpace(cita.ResultadoOjoIzquierdo) &&
+                                 string.IsNullOrWhiteSpace(cita.ResultadoOjoDerecho))
+                            {
+                                <span>Sin resultado</span>
+                            }
+                        </td>
+
+                        <td>@(string.IsNullOrWhiteSpace(cita.MedicoResponsable) ? "Médico" : cita.MedicoResponsable)</td>
+
+                        <td>
+                            @if (!string.IsNullOrWhiteSpace(cita.ReportePdf))
+                            {
+                                <a class="view-btn" href="@Url.Content(cita.ReportePdf)" target="_blank">
+                                    Ver PDF
+                                </a>
+                            }
+                            else
+                            {
+                                <span style="font-size:11px; color:#6a7883;">Sin reporte</span>
+                            }
+                        </td>
+                    </tr>
+                }
+
+                @if (!Model.Historial.Any())
+                {
+                    <tr id="noResults" class="no-results">
+                        <td colspan="8">
+                            No se encontraron análisis con los filtros aplicados
+                        </td>
+                    </tr>
+                }
 
             </tbody>
 
@@ -138,5 +187,3 @@
     </div>
 
 </div>
-
-<script src="~/js/historial.js"></script>

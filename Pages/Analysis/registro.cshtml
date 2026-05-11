@@ -1,0 +1,122 @@
+﻿@page
+@model ProyectoDeGradoFundacion.Pages.Analysis.registroModel
+@{
+    ViewData["Title"] = "Registro";
+    Layout = null;
+}
+
+<link rel="stylesheet" href="~/css/registro.css" />
+
+<div class="auth-page">
+    <div class="auth-shell auth-register-shell">
+
+        <div class="auth-left">
+            <div class="brand-block">
+                <div class="brand-logo">
+                    <span class="brand-c">C</span>línica
+                </div>
+
+                <div class="brand-subtitle">Fundación Clínica</div>
+
+                <p class="brand-text">
+                    Regístrese con sus datos personales para hacer uso de las funcionalidades del sitio web.
+                </p>
+
+                <div class="brand-actions">
+                    <a asp-page="/inicio_sesion" class="secondary auth-link-btn">Iniciar Sesión</a>
+                </div>
+
+                <div class="brand-footer">
+                    <span>Help</span>
+                    <span>|</span>
+                    <span>Terms and condition</span>
+                    <span>|</span>
+                    <span>Privacy Policy</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="auth-right">
+            <div class="auth-form-card auth-form-card-register">
+                <h2>Registro</h2>
+                <p class="auth-helper">Ingrese los siguientes datos:</p>
+
+                @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+                {
+                    <div class="message-box error-box-visible">
+                        @Model.ErrorMessage
+                    </div>
+                }
+
+                <form method="post" id="registerForm" novalidate>
+                    <div class="form-group">
+                        <label for="NombresCompletos">Nombres Completos</label>
+                        <input asp-for="Input.NombresCompletos" id="NombresCompletos" class="field-input" placeholder="Nombres Completos" />
+                        <span asp-validation-for="Input.NombresCompletos" class="field-validation"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Apellidos">Apellidos</label>
+                        <input asp-for="Input.Apellidos" id="Apellidos" class="field-input" placeholder="Apellidos" />
+                        <span asp-validation-for="Input.Apellidos" class="field-validation"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="CorreoElectronico">Correo electrónico</label>
+                        <input asp-for="Input.CorreoElectronico" id="CorreoElectronico" class="field-input" placeholder="Correo electrónico" />
+                        <span asp-validation-for="Input.CorreoElectronico" class="field-validation"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Telefono">Teléfono</label>
+                        <input asp-for="Input.Telefono" id="Telefono" class="field-input" placeholder="Teléfono" />
+                        <span asp-validation-for="Input.Telefono" class="field-validation"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="TipoDocumento">Tipo de documento</label>
+                        <select asp-for="Input.TipoDocumento" id="TipoDocumento" class="field-input field-select">
+                            <option value="">Seleccione</option>
+                            <option value="CC">Cédula de ciudadanía</option>
+                            <option value="TI">Tarjeta de identidad</option>
+                            <option value="CE">Cédula de extranjería</option>
+                            <option value="PP">Pasaporte</option>
+                        </select>
+                        <span asp-validation-for="Input.TipoDocumento" class="field-validation"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="NumeroIdentificacion">Número de identificación</label>
+                        <input asp-for="Input.NumeroIdentificacion" id="NumeroIdentificacion" class="field-input" placeholder="Número de identificación" />
+                        <span asp-validation-for="Input.NumeroIdentificacion" class="field-validation"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Contrasena">Contraseña</label>
+                        <div class="password-wrapper">
+                            <input asp-for="Input.Contrasena" id="Contrasena" class="field-input" placeholder="Contraseña" />
+                            <button type="button" class="password-toggle" data-target="Contrasena">Ver</button>
+                        </div>
+                        <span asp-validation-for="Input.Contrasena" class="field-validation"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ConfirmarContrasena">Confirmar contraseña</label>
+                        <div class="password-wrapper">
+                            <input asp-for="Input.ConfirmarContrasena" id="ConfirmarContrasena" class="field-input" placeholder="Confirmar contraseña" />
+                            <button type="button" class="password-toggle" data-target="ConfirmarContrasena">Ver</button>
+                        </div>
+                        <span asp-validation-for="Input.ConfirmarContrasena" class="field-validation"></span>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="primary auth-submit">Registrarse</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="@Url.Content("~/js/registro.js")"></script>

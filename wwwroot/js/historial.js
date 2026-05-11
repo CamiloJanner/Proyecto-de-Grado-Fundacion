@@ -83,13 +83,7 @@
     document.querySelectorAll(".view-btn").forEach(btn => {
 
         btn.addEventListener("click", function () {
-
-            const analisis = this.dataset.analisis;
-
-            sessionStorage.setItem("analisisSeleccionado", analisis);
-
-            alert("Mostrar detalle del análisis: " + analisis);
-
+            return true;
         });
 
     });

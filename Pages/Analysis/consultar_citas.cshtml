@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Citas Habilitadas para Análisis de IA";
+    Layout = null;
 }
 
 <link rel="stylesheet" href="~/css/citas.css" />
@@ -18,14 +19,18 @@
             <a class="menu-btn" asp-page="/Menu/Index">
                 Menú
             </a>
+
             <a class="menu-btn" asp-page="/Analysis/historial_analisis" style="margin-top:10px;">
                 Historial de análisis
             </a>
         </div>
 
-        <div class="logout">
-            Logout
-        </div>
+        <form method="post" asp-page="/Login/inicio" asp-page-handler="Logout" class="logout-form">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="logout">
+                Logout
+            </button>
+        </form>
 
     </div>
 
@@ -34,132 +39,202 @@
 
         <h2>Citas Habilitadas para Análisis de IA</h2>
 
-        <!-- MENSAJE ERROR CLINIC ONLINE -->
-        <div id="errorClinic" class="error-box"></div>
+        @if (!string.IsNullOrWhiteSpace(Model.MensajeInformativo))
+        {
+            <div id="errorClinic" class="error-box" style="display:block;">
+                @Model.MensajeInformativo
+            </div>
+        }
+        else
+        {
+            <div id="errorClinic" class="error-box"></div>
+        }
 
-        <div class="actions">
-            <button type="button" class="primary" id="consultarPacientes">Consultar Pacientes</button>
-            <button type="button" class="secondary" id="limpiarFiltros">Limpiar filtros</button>
-        </div>
+        <form method="get" id="filtrosCitasForm">
 
-        <!-- FILTROS -->
-        <div class="filters">
+            <input type="hidden" name="PageNumber" value="1" />
 
-            <div class="filter-item">
-                <label>Código</label>
-                <input type="text" id="filterCodigo">
+            <div class="actions">
+                <button type="submit" class="primary" id="consultarPacientes">
+                    Consultar Pacientes
+                </button>
+
+                <a class="secondary" id="limpiarFiltros" asp-page="/Analysis/consultar_citas">
+                    Limpiar filtros
+                </a>
             </div>
 
-            <div class="filter-item">
-                <label>Nombre</label>
-                <input type="text" id="filterNombre">
+            <div class="filters">
+
+                <div class="filter-item">
+                    <label>Código</label>
+                    <input type="text" asp-for="FilterCodigo" id="filterCodigo">
+                </div>
+
+                <div class="filter-item">
+                    <label>Nombre</label>
+                    <input type="text" asp-for="FilterNombre" id="filterNombre">
+                </div>
+
+                <div class="filter-item">
+                    <label>Apellido</label>
+                    <input type="text" asp-for="FilterApellido" id="filterApellido">
+                </div>
+
+                <div class="filter-item">
+                    <label>Tipo</label>
+                    <input type="text" asp-for="FilterTipo" id="filterTipo" placeholder="CC o TI">
+                </div>
+
+                <div class="filter-item">
+                    <label>Documento</label>
+                    <input type="text" asp-for="FilterDocumento" id="filterDocumento">
+                </div>
+
+                <button type="submit" class="search-btn" id="buscarCitas">
+                    Buscar
+                </button>
+
             </div>
 
-            <div class="filter-item">
-                <label>Apellido</label>
-                <input type="text" id="filterApellido">
+        </form>
+
+        @if (Model.TotalRegistros > 0)
+        {
+            <div class="pagination-info">
+                Mostrando página @Model.PageNumber de @Model.TotalPaginas.
+                Total de citas encontradas: @Model.TotalRegistros.
             </div>
+        }
 
-            <div class="filter-item">
-                <label>Tipo</label>
-                <input type="text" id="filterTipo">
-            </div>
-
-            <div class="filter-item">
-                <label>Documento</label>
-                <input type="text" id="filterDocumento">
-            </div>
-
-            <button type="button" class="search-btn" id="buscarCitas">Buscar</button>
-
-        </div>
-
-        <!-- TABLA -->
         <table class="table">
 
             <thead>
                 <tr>
-                    <th>CODIGO</th>
+                    <th>CÓDIGO</th>
                     <th>NOMBRE 1</th>
                     <th>NOMBRE 2</th>
                     <th>APELLIDO 1</th>
                     <th>APELLIDO 2</th>
                     <th>TIPO</th>
                     <th>DOCUMENTO</th>
+                    <th>FECHA CITA</th>
                     <th>ACCIONES</th>
                 </tr>
             </thead>
 
             <tbody id="tablaCitas">
 
-                <tr>
-                    <td>CITA-001</td>
-                    <td>JULIO</td>
-                    <td>ANDRES</td>
-                    <td>RAMIREZ</td>
-                    <td>TORRES</td>
-                    <td>CC</td>
-                    <td>1094583726</td>
-                    <td>
-                        <a class="view-btn" data-cita="CITA-001" asp-page="/Analysis/Index">
-                            Ver
-                        </a>
-                    </td>
-                </tr>
+                @foreach (var cita in Model.Citas)
+                {
+                    var esHoy = cita.FechaCita.HasValue &&
+                                cita.FechaCita.Value.Date == DateTime.Today;
 
-                <tr>
-                    <td>CITA-002</td>
-                    <td>JUAN</td>
-                    <td>CARLOS</td>
-                    <td>GOMEZ</td>
-                    <td>DELGADO</td>
-                    <td>CC</td>
-                    <td>1032764915</td>
-                    <td>
-                        <a class="view-btn" data-cita="CITA-002" asp-page="/Analysis/Index">
-                            Ver
-                        </a>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>@cita.CodigoCita</td>
+                        <td>@cita.Nombre1</td>
+                        <td>@(string.IsNullOrWhiteSpace(cita.Nombre2) ? "-" : cita.Nombre2)</td>
+                        <td>@cita.Apellido1</td>
+                        <td>@(string.IsNullOrWhiteSpace(cita.Apellido2) ? "-" : cita.Apellido2)</td>
+                        <td>@cita.TipoDocumento</td>
+                        <td>@cita.Documento</td>
+                        <td>
+                            @(cita.FechaCita.HasValue
+                                ? cita.FechaCita.Value.ToString("yyyy-MM-dd")
+                                : "-")
+                        </td>
+                        <td>
+                            @if (esHoy)
+                            {
+                                <a class="view-btn"
+                                   asp-page="/Analysis/Index"
+                                   asp-route-codigoCita="@cita.CodigoCita"
+                                   asp-route-documento="@cita.Documento"
+                                   asp-route-tipoDocumento="@cita.TipoDocumento"
+                                   asp-route-nombrePaciente="@cita.NombreCompleto"
+                                   asp-route-fechaCita="@(cita.FechaCita?.ToString("yyyy-MM-dd"))">
+                                    Ver
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="view-btn disabled">
+                                    Solo citas de hoy
+                                </span>
+                            }
+                        </td>
+                    </tr>
+                }
 
-                <tr>
-                    <td>CITA-003</td>
-                    <td>MARIA</td>
-                    <td>FERNANDA</td>
-                    <td>LOPEZ</td>
-                    <td>CASTILLO</td>
-                    <td>CC</td>
-                    <td>1118492307</td>
-                    <td>
-                        <a class="view-btn" data-cita="CITA-003" asp-page="/Analysis/Index">
-                            Ver
-                        </a>
-                    </td>
-                </tr>
-
-                <!-- FILA SIN RESULTADOS -->
-                <tr id="noResults" class="no-results" style="display:none;">
-                    <td colspan="8">
-                        No se encontraron citas con los filtros aplicados
-                    </td>
-                </tr>
+                @if (!Model.Citas.Any())
+                {
+                    <tr id="noResults" class="no-results">
+                        <td colspan="9">
+                            No se encontraron citas disponibles
+                        </td>
+                    </tr>
+                }
 
             </tbody>
 
         </table>
 
-        <!-- PAGINACION -->
-        <div class="pagination">
+        @if (Model.TotalRegistros > 0 && Model.TotalPaginas > 1)
+        {
+            <div class="pagination">
 
-            <button>&lt;</button>
-            <button class="active">1</button>
-            <button>2</button>
-            <button>3</button>
-            <button>4</button>
-            <button>5</button>
-            <button>6</button>
+                @if (Model.TienePaginaAnterior)
+                {
+                    <a class="page-link"
+                       asp-page="/Analysis/consultar_citas"
+                       asp-route-PageNumber="@(Model.PageNumber - 1)"
+                       asp-route-FilterCodigo="@Model.FilterCodigo"
+                       asp-route-FilterNombre="@Model.FilterNombre"
+                       asp-route-FilterApellido="@Model.FilterApellido"
+                       asp-route-FilterTipo="@Model.FilterTipo"
+                       asp-route-FilterDocumento="@Model.FilterDocumento">
+                        &lt;
+                    </a>
+                }
+                else
+                {
+                    <span class="page-link disabled">&lt;</span>
+                }
 
-        </div>
+                @for (int i = 1; i <= Model.TotalPaginas; i++)
+                {
+                    <a class="page-link @(i == Model.PageNumber ? "active" : "")"
+                       asp-page="/Analysis/consultar_citas"
+                       asp-route-PageNumber="@i"
+                       asp-route-FilterCodigo="@Model.FilterCodigo"
+                       asp-route-FilterNombre="@Model.FilterNombre"
+                       asp-route-FilterApellido="@Model.FilterApellido"
+                       asp-route-FilterTipo="@Model.FilterTipo"
+                       asp-route-FilterDocumento="@Model.FilterDocumento">
+                        @i
+                    </a>
+                }
+
+                @if (Model.TienePaginaSiguiente)
+                {
+                    <a class="page-link"
+                       asp-page="/Analysis/consultar_citas"
+                       asp-route-PageNumber="@(Model.PageNumber + 1)"
+                       asp-route-FilterCodigo="@Model.FilterCodigo"
+                       asp-route-FilterNombre="@Model.FilterNombre"
+                       asp-route-FilterApellido="@Model.FilterApellido"
+                       asp-route-FilterTipo="@Model.FilterTipo"
+                       asp-route-FilterDocumento="@Model.FilterDocumento">
+                        &gt;
+                    </a>
+                }
+                else
+                {
+                    <span class="page-link disabled">&gt;</span>
+                }
+
+            </div>
+        }
 
     </div>
 

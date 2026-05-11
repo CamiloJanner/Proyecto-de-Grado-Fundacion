@@ -1,0 +1,512 @@
+﻿@page
+@model ProyectoDeGradoFundacion.Pages.Admin.administracion_seguridadModel
+
+@{
+    ViewData["Title"] = "Administración y Seguridad";
+    Layout = null;
+}
+
+<link rel="stylesheet" href="~/css/admin_seg.css" />
+
+<div class="layout">
+
+    <div class="sidebar">
+
+        <div>
+            <div class="logo">Clínica</div>
+
+            <div class="menu">
+                <button type="button" class="menu-btn active admin-menu-link" data-section="usuarios">
+                    Administración
+                </button>
+
+                <button type="button" class="menu-btn admin-menu-link" data-section="perfiles">
+                    Perfiles
+                </button>
+
+                <button type="button" class="menu-btn admin-menu-link" data-section="reportes">
+                    Reportes finalizados
+                </button>
+
+                <button type="button" class="menu-btn admin-menu-link" data-section="observaciones">
+                    Observaciones clínicas
+                </button>
+
+                <button type="button" class="menu-btn admin-menu-link" data-section="logs">
+                    Logs de auditoría
+                </button>
+
+                <a class="menu-btn" asp-page="/Menu/Index">
+                    Menú
+                </a>
+            </div>
+        </div>
+
+        <div>
+            <form method="post" asp-page="/Login/inicio" asp-page-handler="Logout">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="logout logout-btn">
+                    Logout
+                </button>
+            </form>
+        </div>
+
+    </div>
+
+    <div class="content">
+
+        <div class="page-header">
+            <div>
+                <h2 id="tituloModulo">Usuarios Clinic Online</h2>
+                <p class="subtitle">
+                    Gestión de usuarios Clinic Online, perfiles, reportes y logs de auditoría del sistema
+                </p>
+            </div>
+
+            <a class="back-btn" asp-page="/Menu/Index">
+                Volver
+            </a>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(Model.Error))
+        {
+            <div class="error-box" style="display:block;">
+                @Model.Error
+            </div>
+        }
+
+        @if (!string.IsNullOrWhiteSpace(Model.Mensaje))
+        {
+            <div class="error-box success-box" style="display:block;">
+                @Model.Mensaje
+            </div>
+        }
+
+        <section class="admin-section active-section" id="sectionUsuarios">
+
+            <form method="get" class="filters">
+
+                <div class="filter-item">
+                    <label>Filtro general</label>
+                    <input type="text"
+                           asp-for="FiltroUsuario"
+                           placeholder="Buscar por código, login o rol" />
+                </div>
+
+                <button type="submit" class="search-btn">
+                    Buscar
+                </button>
+
+                <a class="secondary" asp-page="/Admin/administracion_seguridad">
+                    Limpiar filtros
+                </a>
+
+            </form>
+
+            <form method="post" asp-page-handler="GuardarRolesClinic">
+                @Html.AntiForgeryToken()
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>CÓDIGO EMPLEADO</th>
+                            <th>LOGIN</th>
+                            <th>ESTADO</th>
+                            <th>ROL ACTUAL</th>
+                            <th>ACCIONES</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @for (int i = 0; i < Model.UsuariosClinic.Count; i++)
+                        {
+                            var usuario = Model.UsuariosClinic[i];
+
+                            <tr>
+                                <td>
+                                    @usuario.Codempleados
+                                    <input type="hidden" name="Asignaciones[@i].Codempleados" value="@usuario.Codempleados" />
+                                </td>
+
+                                <td>
+                                    @usuario.Login
+                                    <input type="hidden" name="Asignaciones[@i].Login" value="@usuario.Login" />
+                                </td>
+
+                                <td>
+                                    @if (usuario.TieneAsignacion && usuario.Estado)
+                                    {
+                                        <span class="status-badge active">Activo</span>
+                                    }
+                                    else if (usuario.TieneAsignacion && !usuario.Estado)
+                                    {
+                                        <span class="status-badge inactive">Inactivo</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="status-badge pending">Sin configurar</span>
+                                    }
+                                </td>
+
+                                <td>
+                                    @(string.IsNullOrWhiteSpace(usuario.RolNombre) ? "Sin asignar" : usuario.RolNombre)
+                                </td>
+
+                                <td>
+                                    @if (!usuario.TieneAsignacion)
+                                    {
+                                        <button type="button" class="view-btn btn-asignar-rol">
+                                            Asignar rol
+                                        </button>
+                                    }
+
+                                    <div class="role-editor @(usuario.TieneAsignacion ? "show" : "")">
+                                        <select name="Asignaciones[@i].RolId" class="table-select">
+                                            <option value="">Seleccionar rol</option>
+
+                                            @foreach (var rol in Model.Roles)
+                                            {
+                                                if (usuario.RolId == rol.RolId)
+                                                {
+                                                    <option value="@rol.RolId" selected>@rol.Nombre</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@rol.RolId">@rol.Nombre</option>
+                                                }
+                                            }
+                                        </select>
+
+                                        <label class="check-line">
+    @if (usuario.Estado)
+    {
+        <input type="checkbox"
+               name="Asignaciones[@i].Estado"
+               value="true"
+               checked />
+    }
+    else
+    {
+        <input type="checkbox"
+               name="Asignaciones[@i].Estado"
+               value="true" />
+    }
+
+    <input type="hidden" name="Asignaciones[@i].Estado" value="false" />
+
+    Activo
+</label>
+
+                                        @if (usuario.TieneAsignacion && usuario.Estado)
+                                        {
+                                            <button type="button" class="mini-danger btn-quitar-activo">
+                                                Quitar activo
+                                            </button>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+
+                        @if (!Model.UsuariosClinic.Any())
+                        {
+                            <tr class="no-results">
+                                <td colspan="5">
+                                    No se encontraron usuarios de Clinic Online.
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <div class="save-all-wrapper">
+                    <button type="submit" class="primary">
+                        Guardar cambios
+                    </button>
+                </div>
+
+            </form>
+
+        </section>
+
+        <section class="admin-section" id="sectionPerfiles">
+
+            <div class="profile-actions">
+                <button type="button" class="primary" id="btnAgregarPerfilVisual">
+                    Agregar perfil visual
+                </button>
+            </div>
+
+            <table class="table perfiles-table">
+                <thead>
+                    <tr>
+                        <th>ID ROL</th>
+                        <th>PERFIL</th>
+                        <th>DESCRIPCIÓN DEL ACCESO</th>
+                        <th>ACCIONES</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablaPerfiles">
+                    @foreach (var rol in Model.Roles)
+                    {
+                        <tr class="perfil-row">
+                            <td>@rol.RolId</td>
+
+                            <td>
+                                <input type="text"
+                                       value="@rol.Nombre"
+                                       class="profile-input profile-name-input"
+                                       readonly />
+                            </td>
+
+                            <td>
+                                <textarea class="profile-textarea profile-description-input"
+                                          readonly>@Model.ObtenerDescripcionRol(rol.Nombre)</textarea>
+                            </td>
+
+                            <td>
+                                <button type="button" class="view-btn btn-editar-perfil">
+                                    Editar
+                                </button>
+
+                                <button type="button" class="view-btn btn-guardar-perfil" style="display:none;">
+                                    Guardar
+                                </button>
+                            </td>
+                        </tr>
+                    }
+
+                    @if (!Model.Roles.Any())
+                    {
+                        <tr class="no-results" id="noProfiles">
+                            <td colspan="4">
+                                No existen perfiles configurados.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </section>
+
+        <section class="admin-section" id="sectionReportes">
+
+            <form method="get" class="filters">
+
+                <div class="filter-item">
+                    <label>Filtro general</label>
+                    <input type="text"
+                           asp-for="FiltroReporte"
+                           placeholder="Buscar por cita, paciente, médico o resultado" />
+                </div>
+
+                <button type="submit" class="search-btn">
+                    Buscar
+                </button>
+
+            </form>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>CITA</th>
+                        <th>PACIENTE</th>
+                        <th>DOCUMENTO</th>
+                        <th>RESULTADO</th>
+                        <th>MÉDICO</th>
+                        <th>FECHA ANÁLISIS</th>
+                        <th>PDF</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var reporte in Model.Reportes)
+                    {
+                        <tr>
+                            <td>@reporte.CitaExternaId</td>
+                            <td>@reporte.Usuario.NombreUsuario @reporte.Usuario.ApellidoUsuario</td>
+                            <td>@reporte.Usuario.TipoIdentificacion @reporte.Usuario.NumeroIdentificacion</td>
+                            <td>
+                                @if (!string.IsNullOrWhiteSpace(reporte.ResultadoOjoIzquierdo))
+                                {
+                                    <span><strong>OI:</strong> @reporte.ResultadoOjoIzquierdo</span><br />
+                                }
+
+                                @if (!string.IsNullOrWhiteSpace(reporte.ResultadoOjoDerecho))
+                                {
+                                    <span><strong>OD:</strong> @reporte.ResultadoOjoDerecho</span>
+                                }
+                            </td>
+                            <td>@(string.IsNullOrWhiteSpace(reporte.MedicoResponsable) ? "Médico" : reporte.MedicoResponsable)</td>
+                            <td>@reporte.FechaAnalisis?.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td>
+                                @if (!string.IsNullOrWhiteSpace(reporte.ReportePdf))
+                                {
+                                    <a class="view-btn" href="@Url.Content(reporte.ReportePdf)" target="_blank">
+                                        Ver PDF
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span>Sin PDF</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+
+                    @if (!Model.Reportes.Any())
+                    {
+                        <tr class="no-results">
+                            <td colspan="7">
+                                No se encontraron reportes finalizados.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </section>
+
+        <section class="admin-section" id="sectionObservaciones">
+
+            <form method="get" class="filters">
+
+                <div class="filter-item">
+                    <label>Filtro general</label>
+                    <input type="text"
+                           asp-for="FiltroObservacion"
+                           placeholder="Buscar por cita, paciente u observación" />
+                </div>
+
+                <button type="submit" class="search-btn">
+                    Buscar
+                </button>
+
+            </form>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>CITA</th>
+                        <th>PACIENTE</th>
+                        <th>OJO IZQUIERDO</th>
+                        <th>OJO DERECHO</th>
+                        <th>MÉDICO</th>
+                        <th>FECHA</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var obs in Model.Observaciones)
+                    {
+                        <tr>
+                            <td>@obs.CitaExternaId</td>
+                            <td>@obs.Usuario.NombreUsuario @obs.Usuario.ApellidoUsuario</td>
+                            <td>@(string.IsNullOrWhiteSpace(obs.ObservacionesOjoIzquierdo) ? "-" : obs.ObservacionesOjoIzquierdo)</td>
+                            <td>@(string.IsNullOrWhiteSpace(obs.ObservacionesOjoDerecho) ? "-" : obs.ObservacionesOjoDerecho)</td>
+                            <td>@(string.IsNullOrWhiteSpace(obs.MedicoResponsable) ? "Médico" : obs.MedicoResponsable)</td>
+                            <td>@obs.FechaAnalisis?.ToString("yyyy-MM-dd HH:mm")</td>
+                        </tr>
+                    }
+
+                    @if (!Model.Observaciones.Any())
+                    {
+                        <tr class="no-results">
+                            <td colspan="6">
+                                No se encontraron observaciones clínicas.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </section>
+
+        <section class="admin-section" id="sectionLogs">
+
+            <form method="get" class="filters">
+
+                <div class="filter-item">
+                    <label>Tipo de registro</label>
+                    <select asp-for="FiltroTipoLog" class="table-select">
+                        <option value="">Todos</option>
+                        <option value="sesion">Sesión</option>
+                        <option value="analisis">Análisis</option>
+                    </select>
+                </div>
+
+                <div class="filter-item">
+                    <label>Usuario / Paciente / Médico</label>
+                    <input type="text"
+                           asp-for="FiltroUsuarioLog"
+                           placeholder="Buscar por usuario, paciente o médico" />
+                </div>
+
+                <div class="filter-item">
+                    <label>Fecha inicio</label>
+                    <input type="date" asp-for="FechaInicio" />
+                </div>
+
+                <div class="filter-item">
+                    <label>Fecha fin</label>
+                    <input type="date" asp-for="FechaFin" />
+                </div>
+
+                <button type="submit" class="search-btn">
+                    Buscar
+                </button>
+
+            </form>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>TIPO</th>
+                        <th>USUARIO</th>
+                        <th>ROL</th>
+                        <th>LOGIN</th>
+                        <th>LOGOUT</th>
+                        <th>TIEMPO</th>
+                        <th>PACIENTE</th>
+                        <th>MÉDICO</th>
+                        <th>FECHA ANÁLISIS</th>
+                        <th>DESCRIPCIÓN</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var log in Model.Logs)
+                    {
+                        <tr>
+                            <td>@log.TipoRegistro</td>
+                            <td>@(log.Usuario ?? "-")</td>
+                            <td>@(log.Rol ?? "-")</td>
+                            <td>@(log.FechaLogin?.ToString("yyyy-MM-dd HH:mm") ?? "-")</td>
+                            <td>@(log.FechaLogout?.ToString("yyyy-MM-dd HH:mm") ?? "-")</td>
+                            <td>@(log.TiempoSesionMinutos.HasValue ? $"{log.TiempoSesionMinutos} min" : "-")</td>
+                            <td>@(log.Paciente ?? "-")</td>
+                            <td>@(log.MedicoResponsable ?? "-")</td>
+                            <td>@(log.FechaAnalisis?.ToString("yyyy-MM-dd HH:mm") ?? "-")</td>
+                            <td>@(log.Descripcion ?? "-")</td>
+                        </tr>
+                    }
+
+                    @if (!Model.Logs.Any())
+                    {
+                        <tr class="no-results">
+                            <td colspan="10">
+                                No se encontraron resultados con los filtros aplicados.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </section>
+
+    </div>
+
+</div>
+
+<script src="~/js/admin_seg.js"></script>

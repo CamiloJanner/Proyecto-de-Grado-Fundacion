@@ -1,0 +1,100 @@
+﻿@page
+@model ProyectoDeGradoFundacion.Pages.Login.inicioModel
+@{
+    ViewData["Title"] = "Inicio de sesión";
+    Layout = null;
+}
+
+<link rel="stylesheet" href="~/css/inicio.css" />
+
+<div class="auth-page">
+    <div class="auth-shell auth-login-shell">
+
+        <div class="auth-left">
+            <div class="brand-block">
+                <div class="brand-logo">
+                    <span class="brand-c">C</span>línica
+                </div>
+
+                <div class="brand-subtitle">Fundación Clínica</div>
+
+                <p class="brand-text">
+                    Ingrese sus credenciales para acceder a las funcionalidades habilitadas del sistema.
+                </p>
+
+                <div class="brand-footer">
+                    <span>Help</span>
+                    <span>|</span>
+                    <span>Terms and condition</span>
+                    <span>|</span>
+                    <span>Privacy Policy</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="auth-right">
+            <div class="auth-form-card">
+                <h2>Iniciar Sesión</h2>
+                <p class="auth-helper">Ingrese su usuario o documento y contraseña</p>
+
+                @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+                {
+                    <div class="message-box error-box-visible">
+                        @Model.ErrorMessage
+                    </div>
+                }
+
+                @if (!string.IsNullOrWhiteSpace(Model.SuccessMessage))
+                {
+                    <div class="message-box success-box-visible">
+                        @Model.SuccessMessage
+                    </div>
+                }
+
+                <form method="post" id="loginForm" novalidate>
+
+                    @Html.AntiForgeryToken()
+
+                    <div class="form-group">
+                        <label for="Identificador">Usuario o documento</label>
+
+                        <input asp-for="Input.Identificador"
+                               id="Identificador"
+                               class="field-input"
+                               placeholder="Ejemplo: YLIZARAZO o 317" />
+
+                        <span asp-validation-for="Input.Identificador" class="field-validation"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Contrasena">Contraseña</label>
+
+                        <div class="password-wrapper">
+                            <input asp-for="Input.Contrasena"
+                                   id="Contrasena"
+                                   class="field-input"
+                                   placeholder="Contraseña"
+                                   type="password" />
+
+                            <button type="button" class="password-toggle" data-target="Contrasena">
+                                Ver
+                            </button>
+                        </div>
+
+                        <span asp-validation-for="Input.Contrasena" class="field-validation"></span>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="primary auth-submit">
+                            Iniciar Sesión
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="@Url.Content("~/js/inicio.js")"></script>
